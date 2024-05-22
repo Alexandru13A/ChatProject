@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: page_head('none')}">
+
+</head>
+
+<body>
+    <div class="background">
+        <div class="loginShape"></div>
+        <div class="loginShape"></div>
+    </div>
+    <form class="loginForm" th:action="@{/login}" method="post" >
+        <h3>Login Here</h3>
+
+        <div th:if="${param.error}">
+			<p style="text-align: center;" class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+		</div>
+
+        <label class="labelForm" for="username">Username</label>
+        <input class="inputForm" type="email" name="email" placeholder="Email or Phone" id="username">
+
+        <label class="labelForm" for="password">Password</label>
+        <input class="inputForm" type="password" name="password" placeholder="Password" id="password">
+
+        <button type="submit" class="loginButton">Login</button>
+        <div class="social">
+            <div style="cursor: pointer;" class="go"><img th:src="@{/images/buttons/google_logo.png}"
+                    style="max-width: 20; max-height: 20px;" />&nbsp; Google</div>
+            <div style="cursor: pointer;" class="fb"><img th:src="@{/images/buttons/facebook_logo.png}"
+                    style="max-width: 20; max-height: 20px;" />&nbsp;Facebook</div>
+        </div>
+        <div> &nbsp; </div>
+        <div style="text-align: center;">
+            <a style="text-decoration: none;" th:href="@{/forgot_password}">Forgot Password</a>
+        </div>
+        <div style="text-align: center;">
+            Don't have an account?
+            <a style="text-decoration: none;" th:href="@{/register}">
+                <b style="color: rgb(211, 187, 233);">Sign up</b>
+            </a>
+        </div>
+        <div> &nbsp; </div>
+        </div>
+
+    </form>
+</body>
+
+</html>

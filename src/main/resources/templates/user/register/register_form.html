@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: page_head('none')}">
+
+</head>
+
+<body>
+  <div class="background">
+    <div class="registerShape"></div>
+    <div class="registerShape"></div>
+  </div>
+
+  <form class="registerForm" th:object="${user}" method="post" th:action="@{/process_register}"
+    onsubmit="return checkEmailUnique(this)">
+    <h3>Register</h3>
+
+    <div class="row">
+      <div class="col">
+        <label class="labelForm">First name</label>
+        <input class="inputForm" type="text" placeholder="First name" th:field="*{firstName}" required="required">
+      </div>
+      <div class="col">
+        <label class="labelForm">Last name</label>
+        <input class="inputForm" type="text" placeholder="Last name" th:field="*{lastName}" required="required">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label class="labelForm">Username</label>
+        <input class="inputForm" type="text" placeholder="Displayed username" th:field="*{username}"
+          required="required">
+      </div>
+
+      <div class="col">
+        <label class="labelForm">Phone number</label>
+        <input class="inputForm" type="text" placeholder="Phone number" th:field="*{phoneNumber}" required="required">
+      </div>
+    </div>
+
+
+    <label class="labelForm">Email</label>
+    <input class="inputForm" type="text" placeholder="Email" th:field="*{email}" required="required">
+
+    <div class="row">
+      <div class="col">
+        <label class="labelForm">Password</label>
+        <input class="inputForm" type="password"
+          oninput="checkPasswordMatch(document.getElementById('confirmPassword'))" placeholder="Password"
+          th:field="*{password}" minlength="8" maxlength="64" required="required">
+      </div>
+
+      <div class="col">
+        <label class="labelForm">Repeat password</label>
+        <input class="inputForm" type="password" oninput="checkPasswordMatch(this)" placeholder="Repeat password"
+          id="confirmPassword" required="required">
+      </div>
+    </div>
+
+
+    <button type="submit" class="registerButton">Register</button>
+    <div>&nbsp;</div>
+    <div style="text-align: center;">
+      Already have an account?
+      <a style="text-decoration: none;" th:href="@{/login}">
+        <b style="color:rgb(211, 187, 233);">Login</b>
+      </a>
+    </div>
+
+  </form>
+
+  <div th:replace="~{fragments :: modal_dialog}" />
+
+  <script type="text/javascript">
+    contextPath = "[[@{/}]]";
+
+    function checkEmailUnique(form) {
+      url = contextPath + "check_unique_email";
+      customerEmail = $("#email").val();
+      csrfValue = $("input[name='_csrf']").val();
+
+      params = { email: customerEmail, _csrf: csrfValue };
+
+      $.post(url, params, function (response) {
+        if (response == "OK") {
+          form.submit();
+        } else if (response == "Duplicated") {
+          showWarningModal("There is another user having the email " + customerEmail);
+        } else {
+          showErrorModal("Unknown response from server");
+        }
+      }).fail(function () {
+        showErrorModal("Could not connect to the server");
+      });
+
+      return false;
+    }
+
+  </script>
+
+  <script type="text/javascript" th:src="@{/js/modal.js}"></script>
+  <script type="text/javascript" th:src="@{/js/password_match.js}"></script>
+</body>
+
+</html>

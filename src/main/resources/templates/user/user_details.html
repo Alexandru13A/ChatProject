@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: page_head('none')}"></head>
+
+<body>
+
+  <div class="chat-app">
+
+    <div class="main-window">
+
+      <div class="row">
+        <div class="col m-1">
+         <a th:href="@{/}" style="text-decoration: none;"><img th:src="@{images/buttons/undo.png}" style="max-width: 20px;max-height: 20px;"></a> 
+        </div>
+        <div class="col">
+          <div  style="text-align: center;">
+            <img th:src="@{${user.userImagePath}}" style="height: 60px; width: 60px;">
+          </div>
+          <div style="text-align: center;">
+            <b>[[${user.fullName}]]</b>
+          </div>
+        </div>
+        <div style="text-align: end;" class="col m-1">
+          <b>Logout</b>
+        </div>
+      </div>
+
+
+
+
+
+
+    </div>
+  </div>
+
+
+</body>
+
+
+
+
+</html>
