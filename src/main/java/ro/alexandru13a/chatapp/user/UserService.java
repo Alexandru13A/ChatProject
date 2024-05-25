@@ -1,6 +1,9 @@
 package ro.alexandru13a.chatapp.user;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +36,37 @@ public class UserService {
     return user == null;
   }
 
+  public void addFriend(Integer userId, Integer friendId) {
+    User user = getUserById(userId);
+    User friend = getUserById(friendId);
+
+    if (user != null && friend != null && !user.equals(friend)) {
+      user.getFriends().add(friend);
+      friend.getFriends().add(user);
+      userRepository.save(user);
+    }
+  }
+
+   public Set<User> getFriends(Integer userId) {
+        User user = getUserById(userId);
+        if (user != null) {
+            return user.getFriends();
+        } else {
+            return new HashSet<>();
+        }
+    }
+
+    public void removeFriend(Integer userId, Integer friendId) {
+      User user = getUserById(userId);
+      User friend = getUserById(friendId);
+
+      if (user != null && friend != null && user.getFriends().contains(friend)) {
+          user.getFriends().remove(friend);
+          friend.getFriends().remove(user);
+          userRepository.save(user); 
+      }
+  }
+
   public void registerUser(User user) {
     encodePassword(user);
     user.setEnabled(false);
@@ -46,7 +80,7 @@ public class UserService {
 
   }
 
-  public void updateUser(User userInForm) {
+  public User updateUser(User userInForm, String newUsername) {
     User userInDb = userRepository.findById(userInForm.getId()).get();
 
     if (userInDb.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
@@ -59,13 +93,28 @@ public class UserService {
       userInForm.setPassword(userInDb.getPassword());
     }
 
+    if (newUsername.isEmpty() || newUsername == null) {
+      userInForm.setUsername(userInDb.getUsername());
+    } else {
+      userInForm.setUsername(newUsername);
+    }
+
+    userInForm.setFriends(userInDb.getFriends());
+    userInForm.setFirstName(userInDb.getFirstName());
+    userInForm.setLastName(userInDb.getLastName());
+    userInForm.setEmail(userInDb.getEmail());
+    userInForm.setPhoneNumber(userInDb.getPhoneNumber());
     userInForm.setEnabled(userInDb.isEnabled());
     userInForm.setCreatedTime(userInDb.getCreatedTime());
     userInForm.setVerificationCode(userInDb.getVerificationCode());
     userInForm.setAuthenticationType(userInDb.getAuthenticationType());
     userInForm.setResetPasswordToken(userInDb.getResetPasswordToken());
 
-    userRepository.save(userInForm);
+    return userRepository.save(userInForm);
+  }
+
+  public void save(User user) {
+    userRepository.save(user);
   }
 
   public User getUserById(Integer id) {
@@ -76,7 +125,7 @@ public class UserService {
     return userRepository.findByEmail(email);
   }
 
-  public User getUserByUsername(String keyword) {
+  public List<User> getUsersByUsername(String keyword) {
     return userRepository.findByUsername(keyword);
   }
 

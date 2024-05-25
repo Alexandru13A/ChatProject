@@ -1,10 +1,9 @@
 package ro.alexandru13a.chatapp.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -69,21 +71,23 @@ public class User {
   @Column(name = "reset_password_token", length = 30)
   private String resetPasswordToken;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserFriends> friends = new ArrayList<>();
-
+  @ManyToMany
+  @JoinTable(name = "user_friends",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "friend_id"))
+          @OrderBy("id ASC")
+  private Set<User> friends = new HashSet<>();
+  
   public String getFullName() {
     return firstName + " " + lastName;
   }
 
-  
-	
-	@Transient
-	public String getUserImagePath() {
-		if (id == null || profilePhoto == null)
-			return "/images/status/user.png";
+  @Transient
+  public String getUserImagePath() {
+    if (id == null || profilePhoto == null)
+      return "/images/status/user.png";
 
-		return "/user-photo/" + this.id + "/" + this.profilePhoto;
-	}
+    return "/user-photo/" + this.id + "/" + this.profilePhoto;
+  }
 
 }

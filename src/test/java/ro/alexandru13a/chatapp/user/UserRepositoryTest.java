@@ -20,6 +20,7 @@ public class UserRepositoryTest {
 
   @Autowired
   private UserRepository userRepository;
+
   @Autowired
   private TestEntityManager entityManager;
 
@@ -27,11 +28,11 @@ public class UserRepositoryTest {
   public void testCreateUser() {
 
     ro.alexandru13a.chatapp.entity.User user = new User();
-    user.setFirstName("Daniel");
-    user.setLastName("Dan");
-    user.setUsername("daniel76");
-    user.setEmail("daniel@gmail.com");
-    user.setPassword("daniel1234");
+    user.setFirstName("Alexandru");
+    user.setLastName("Vasile");
+    user.setUsername("alexandru13a");
+    user.setEmail("alexandru@gmail.com");
+    user.setPassword("alex1234");
     user.setAuthenticationType(AuthenticationType.DATABASE);
 
     User savedUser = userRepository.save(user);
@@ -50,5 +51,7 @@ public class UserRepositoryTest {
 
 
   }
+
+
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://org.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{fragments :: page_head('none')}"></head>
+
+<body>
+
+  <div class="chat-app">
+    <div class="main-window">
+
+      <div class="row">
+
+        <div class="col">
+
+          <div>
+            <a th:href="@{/home}">
+              <img th:src="@{images/buttons/undo.png}" style="max-width: 20px;max-height: 20px;">
+            </a>
+          </div>
+
+
+          <div style="margin-top: 70px; margin-left: 5px;" class="search-bar">
+            <form th:action="@{/add_friend}">
+              <div class="row">
+                <input style="width: min-content;" id="keyword" name="keyword" th:value="${keyword}" placeholder="Search..." class="form-control" required />
+                <input type="submit" value="Search" class="btn btn-primary" />
+              </div>
+            </form>
+          </div>
+
+          <div class="row m-1">
+            <div class="col" th:each="user : ${users}">
+              <label type="hidden" name="id" th:value="${user.id}">
+                <div>
+                  <img style="border-radius: 50%;" th:src="@{${user.userImagePath}}" width="80"/>
+                </div>
+                <div style="text-align: center;">
+                  <b>[[${user.username}]]</b>
+                  <br>
+                  <form th:action="@{'/add_friend/'+ ${user.id}}" method="post">
+                    <button type="submit">Add friend+</button>
+                  </form>
+                </div>
+              </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

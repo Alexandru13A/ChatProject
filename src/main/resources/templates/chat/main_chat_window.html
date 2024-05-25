@@ -9,50 +9,101 @@
     <div class="chat-app">
       <div class="sidebar">
         <div class="user-profile">
-          <a style="cursor: pointer; text-decoration: none;" th:href="@{/user_details}">
+          <a style="cursor: pointer; text-decoration: none;" th:href="@{/account_details}">
             <img th:src="@{${userImage}}" alt="User Image" class="user-image">
           </a>
-          <button class="add-friend">Add Friends</button>
+          <a th:href="@{/add_friend}">
+            <img th:src="@{/images/status/group.png}" style="max-width: 40px; max-height: 40px;">
+          </a>
         </div>
+
         <div class="search-bar">
           <input class="input" type="text" placeholder="Search...">
         </div>
 
         <div class="friends-list">
-          <ul class="chat-ul">
-            <li class="chat-li">
-              <div class="row m-2">
-                <img th:src="@{images/status/user.png}" style="max-width: 60px; max-height: 60px;" />
-                &nbsp;
-                <div class="col m-1">
-                  <label><b>Name</b></label>
-                  <p>Last message</p>
+          <ul class="chat-ul" th:each="user : ${listFriends}">
+            <a style="text-decoration: none;cursor: pointer;" th:href="@{/home(receiverId=${user.id})}">
+              <li class="chat-li">
+                <div class="row m-2">
+                  <img th:src="@{${user.userImagePath}}" style="max-width: 60px; max-height: 60px;" />
+                  &nbsp;
+                  <div class="col m-1">
+                    <label style="cursor: pointer;color: black;"><b>[[${user.username}]]</b></label>
+                    <p style="color: black;">Last message</p>
+                  </div>
                 </div>
-              </div>
-            </li>
-
+              </li>
+            </a>
           </ul>
         </div>
+        
+      </div>
 
-      </div>
+
+      <th:block th:if="${receiver} != null">
       <div class="chat-area">
-        <div class="chat-header">Chat with Friend 1</div>
-        <div class="chat-messages">
-          <!-- Chat messages will appear here -->
+          <div class="chat-header">
+            <span th:text="${receiver.username}">Chat with Friend</span>
+          </div>
+
+         <div class="chat-messages" id="chat-messages">
+          <div th:each="message : ${messages}">
+            <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
+              <p>
+                <strong th:text="${message.userSender.username}"></strong>:
+                <br>
+                <span style="font-size: 16px;" th:text="${message.content}"></span>
+                <br>
+                <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
+              </p>
+            </div>
+          </div>
         </div>
-        <div class="chat-input">
-          <input class="input" type="text" placeholder="Type a message...">
-          <button class="send-button">
-            <img th:src="@{images/buttons/send.png}" alt="Send">
-          </button>
+
+          <form th:action="@{/send_message}" method="post">
+          <div class="chat-input">
+              <input type="hidden" name="senderId" th:value="${principal.id}" />
+              <input type="hidden" name="receiverId" th:value="${receiver.id}" />
+              <input class="input" type="text" name="content" placeholder="Type a message..." required>
+              <button type="submit" class="send-button">
+                <img th:src="@{images/buttons/send.png}" alt="Send">
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
+      </th:block>
+      
     </div>
   </div>
 
 
 
 
+
+  <script type="text/javascript">
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    const chatForm = document.getElementById('chat-form');
+    chatForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      fetch(chatForm.action, {
+        method: chatForm.method,
+        body: new URLSearchParams(new FormData(chatForm))
+      }).then(response => {
+        if (response.ok) {
+          return response.text();
+        }
+        throw new Error('Network response was not ok.');
+      }).then(html => {
+        document.querySelector('.chat-area').innerHTML = html;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }).catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+    });
+  </script>
 
 </body>
 

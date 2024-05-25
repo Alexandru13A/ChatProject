@@ -3,16 +3,18 @@ package ro.alexandru13a.chatapp;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
+@Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-  @SuppressWarnings("null")
+
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    exposeDirectory("user-photos", registry);
-
+    exposeDirectory("user-photo", registry);
   }
 
   public void exposeDirectory(String pathPattern, ResourceHandlerRegistry registry){
@@ -22,5 +24,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
     registry.addResourceHandler(logicalPath).addResourceLocations("file:/"+absolutePath+"/");
   }
+
+  
+
   
 }

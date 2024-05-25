@@ -52,13 +52,13 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests(
         (requests) -> requests.requestMatchers("/css/**", "/images/**", "/js/**", "/webjars/**").permitAll()
-            .requestMatchers("/account_details", "/update_account_details")
+            .requestMatchers("/account_details", "/update_account")
             .authenticated().anyRequest().permitAll())
         .formLogin(login -> login.loginPage("/login")
             .usernameParameter("email")
             .successHandler(databaseSuccessLoginHandler)
             .permitAll())
-        .logout(logout -> logout.logoutSuccessUrl("/login").permitAll())
+        .logout(logout -> logout.permitAll())
         .rememberMe(remember -> remember.userDetailsService(userDetailsService()));
 
     return http.build();

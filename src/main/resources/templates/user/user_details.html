@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://org.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head th:replace="~{fragments :: page_head('none')}"></head>
 
@@ -9,30 +9,119 @@
 
     <div class="main-window">
 
-      <div class="row">
-        <div class="col m-1">
-         <a th:href="@{/}" style="text-decoration: none;"><img th:src="@{images/buttons/undo.png}" style="max-width: 20px;max-height: 20px;"></a> 
-        </div>
-        <div class="col">
-          <div  style="text-align: center;">
-            <img th:src="@{${user.userImagePath}}" style="height: 60px; width: 60px;">
+      <form th:action="@{update_account}" method="post" th:object="${user}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row">
+          <div class="col m-1">
+            <a th:href="@{/}" style="text-decoration: none;"><img th:src="@{images/buttons/undo.png}"
+                style="max-width: 20px;max-height: 20px;"></a>
           </div>
-          <div style="text-align: center;">
-            <b>[[${user.fullName}]]</b>
+          <div class="col">
+
+
+            <div style="text-align: center;">
+              <label for="fileImage">
+                <img id="thumbnail" th:src="@{${user.userImagePath}}"
+                  style="height: 80px; width: 80px; border-radius: 50%; cursor: pointer;">
+              </label>
+              <input type="hidden" th:field="*{profilePhoto}" />
+              <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg" style="display: none;"
+                class="mb-2" onchange="showImageThumbnail(this)">
+            </div>
+
+
+
+
+            <div style="text-align: center;">
+              <b>[[${user.username}]]</b>
+
+              <div style="text-align: center; margin-top: 30px;">
+                <b>Account information</b>
+                <br>
+                <b>Name: </b> [[${user.fullName}]]
+                <br>
+                <b>Email: </b> [[${user.email}]]
+              </div>
+
+              &nbsp;
+              <div style="margin-top: 50px;">
+                <label style="font-size: 16px;"><b>Change username</b></label>
+                <label>(Leave it blank if you don't want to change the username)</label>
+                <input style="border-radius: 40px;border: none; margin-left: 100px;" class="chat-input"
+                  placeholder="Change username" name="newUsername" />
+              </div>
+
+              <th:block th:if="${user.authenticationType.name() =='DATABASE'}">
+                &nbsp;
+                <div>
+                  <label style="font-size: 16px;margin-top: 30px;"><b>Change password</b></label>
+                  <label>(Leave it blank if you don't want to change the password)</label>
+
+                  <input type="password" style="border-radius: 40px;border: none; margin-left: 100px;"
+                    class="chat-input" placeholder="Change password" th:field="*{password}"
+                    oninput="checkPasswordMatch(document.getElementById('confirmPassword'))" maxlength="70"
+                    minlength="8" />
+
+                  <input type="password" id="confirmPassword"
+                    style="border-radius: 40px;border: none; margin-top: 10px;margin-left: 100px;" class="chat-input"
+                    placeholder="Confirm password" oninput="checkPasswordMatch(this)" maxlength="70" minlength="8" />
+                </div>
+              </th:block>
+
+              <div style="margin-top: 50px;">
+                <button style="padding: 15px;border: none; border-radius: 20px;" type="submit" name="save">Save</button>
+              </div>
+
+            </div>
+          </div>
+          <div style="text-align: end;" class="col m-1">
+            <a class="logoutButton" id="logoutLink" style="text-decoration: none;color: black;" href="#"><b>Logout</b></a>
           </div>
         </div>
-        <div style="text-align: end;" class="col m-1">
-          <b>Logout</b>
-        </div>
-      </div>
 
-
-
-
-
-
+      </form>
     </div>
   </div>
+
+  <th:block sec:authorized="isAuthenticated()">
+    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+      <input type="submit"  />
+    </form>
+  </th:block>
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $("#fileImage").change(function () {
+        showImageThumbnail(this);
+      });
+
+      $("#logoutLink").on("click", function (e) {
+        e.preventDefault();
+        document.logoutForm.submit();
+      });
+
+    });
+
+    function showImageThumbnail(fileInput) {
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $("#thumbnail").attr("src", e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function checkPasswordMatch(confirmPassword) {
+      if (confirmPassword.value != $("#password").val()) {
+        confirmPassword.setCustomValidity("Passwords do not match !")
+      } else {
+        confirmPassword.setCustomValidity("")
+      }
+    }
+  </script>
 
 
 </body>
