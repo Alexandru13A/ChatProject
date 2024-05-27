@@ -37,7 +37,6 @@
             </a>
           </ul>
         </div>
-        
       </div>
 
 
@@ -49,17 +48,26 @@
 
          <div class="chat-messages" id="chat-messages">
           <div th:each="message : ${messages}">
+            
             <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
               <p>
-                <strong th:text="${message.userSender.username}"></strong>:
+                <th:block th:if="${message.userSender.id != principal.id}">
+                  <strong th:text="${message.userSender.username}"></strong>:
+                </th:block>
+                <th:block th:if="${message.userSender.id == principal.id}">
+                  <strong>You</strong>:
+                </th:block>
                 <br>
                 <span style="font-size: 16px;" th:text="${message.content}"></span>
                 <br>
                 <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
               </p>
             </div>
+
+
           </div>
         </div>
+     
 
           <form th:action="@{/send_message}" method="post">
           <div class="chat-input">

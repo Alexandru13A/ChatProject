@@ -36,6 +36,11 @@ public class UserService {
     return user == null;
   }
 
+  public boolean isUsernameUnique(String username){
+    User user = userRepository.getUserByUsername(username);
+    return user == null;
+  }
+
   public void addFriend(Integer userId, Integer friendId) {
     User user = getUserById(userId);
     User friend = getUserById(friendId);
@@ -124,6 +129,7 @@ public class UserService {
   public User getUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }
+
 
   public List<User> getUsersByUsername(String keyword) {
     return userRepository.findByUsername(keyword);

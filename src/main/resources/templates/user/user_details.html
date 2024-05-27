@@ -9,7 +9,7 @@
 
     <div class="main-window">
 
-      <form th:action="@{update_account}" method="post" th:object="${user}" enctype="multipart/form-data">
+      <form th:action="@{/update_account}" method="post" th:object="${user}" enctype="multipart/form-data"  > 
         <input type="hidden" th:field="*{id}">
 
         <div class="row">
@@ -45,11 +45,15 @@
               </div>
 
               &nbsp;
+           
               <div style="margin-top: 50px;">
                 <label style="font-size: 16px;"><b>Change username</b></label>
                 <label>(Leave it blank if you don't want to change the username)</label>
-                <input style="border-radius: 40px;border: none; margin-left: 100px;" class="chat-input"
-                  placeholder="Change username" name="newUsername" />
+                <div th:if="${message} != null">
+                  <p class="text-danger">[[${message}]]</p>
+              </div>
+                <input type="text" style="border-radius: 40px;border: none; margin-left: 100px;" class="chat-input"
+                  placeholder="Change username" id="newUsername" name="newUsername"/>
               </div>
 
               <th:block th:if="${user.authenticationType.name() =='DATABASE'}">
@@ -83,13 +87,15 @@
       </form>
     </div>
   </div>
-
+  
+  
   <th:block sec:authorized="isAuthenticated()">
     <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
       <input type="submit"  />
     </form>
   </th:block>
-
+  
+  <div th:replace="~{fragments :: modal_dialog}" />
 
   <script type="text/javascript">
     $(document).ready(function () {

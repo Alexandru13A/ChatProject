@@ -95,6 +95,11 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.loginButton:hover{
+    background-color: #23a2f6;
+    color: white;
+}
 .social{
   margin-top: 30px;
   display: flex;

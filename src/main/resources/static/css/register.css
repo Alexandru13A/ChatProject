@@ -95,6 +95,12 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.registerButton:hover{
+    background-color: #23a2f6;
+    color: white;
+}
+
 .social{
   margin-top: 30px;
   display: flex;

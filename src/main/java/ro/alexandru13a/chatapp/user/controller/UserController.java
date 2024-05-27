@@ -60,10 +60,10 @@ public class UserController {
     model.addAttribute("userImage", principal.getUserImagePath());
 
     if(receiverId != null){
-      User sender =userService.getUserById(principal.getId());
       User receiver = userService.getUserById(receiverId);
       model.addAttribute("receiver", receiver);
-      model.addAttribute("messages", messageService.getMessageBetweenUsers(sender, receiver));
+      model.addAttribute("messages", messageService.getMessageBetweenUsers(principal, receiver));
+     
     }else{
       model.addAttribute("receiver", null);
     }
@@ -196,6 +196,12 @@ public class UserController {
   public String updateAccount(User user, RedirectAttributes redirectAttributes, HttpServletRequest request,
       @RequestParam("image") MultipartFile multipartFile, @RequestParam("newUsername") String newUsername)
       throws IOException {
+       
+
+        if(!userService.isUsernameUnique(newUsername)){
+          redirectAttributes.addFlashAttribute("message","The username "+newUsername+" it's already taken");
+          return "redirect:/account_details";
+        }
 
     if (!multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
@@ -211,9 +217,7 @@ public class UserController {
         user.setProfilePhoto(null);
       userService.updateUser(user, newUsername);
     }
-
     updateNameForAuthenticatedCustomer(user, request);
-
     return "redirect:/account_details";
   }
 

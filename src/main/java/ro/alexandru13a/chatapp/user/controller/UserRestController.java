@@ -20,4 +20,9 @@ public class UserRestController {
     return userService.isEmailUnique(email) ? "OK" : "Duplicated";
   }
 
+  @PostMapping("/check_unique_username")
+  public String checkForUniqueUsername(@Param("username")String username){
+    return userService.isUsernameUnique(username) ? "OK" : "Duplicated";
+  }
+
 }
