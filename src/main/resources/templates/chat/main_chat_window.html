@@ -32,8 +32,10 @@
                   &nbsp;
                   <div class="col m-1">
                     <label style="cursor: pointer;color: black;"><b>[[${user.username}]]</b></label>
-                    <p style="color: black; margin-bottom: -8px;font-size: 14px;font-weight: 600;">[[${user.lastMessage}]]</p>
-                    <small style="color: black;cursor: pointer;" th:text="${#temporals.format(user.lastMessageTime, 'HH:mm')}"></small>
+                    <p style="color: black; margin-bottom: -8px;font-size: 14px;font-weight: 600;">
+                      [[${user.lastMessage}]]</p>
+                    <small style="color: black;cursor: pointer;"
+                      th:text="${#temporals.format(user.lastMessageTime, 'HH:mm')}"></small>
                   </div>
                 </div>
               </li>
@@ -50,29 +52,40 @@
             <span th:text="${receiver.username}"></span>
           </div>
 
+
           <div class="chat-messages" id="chat-messages">
             <div th:each="message : ${messages}">
+              <form th:action="@{'/delete_message/' + ${message.id}}" method="post">
+                <input type="hidden" name="messageId" th:value="${message.id}" />
+                <input type="hidden" name="receiverId" th:value="${receiver.id}" />
+                <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
+                  <p>
+                    <th:block th:if="${message.userSender.id != principal.id}">
+                      <strong th:text="${message.userSender.username}"></strong>:
+                    </th:block>
+                    <th:block th:if="${message.userSender.id == principal.id}">
+                      <strong>You</strong>:
+                    </th:block>
+                    <br>
+                    <span style="font-size: 16px;" th:text="${message.content}"></span>
+                    <br>
+                    <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
+                  </p>
 
-              <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
-                <p>
-                  <th:block th:if="${message.userSender.id != principal.id}">
-                    <strong th:text="${message.userSender.username}"></strong>:
-                  </th:block>
                   <th:block th:if="${message.userSender.id == principal.id}">
-                    <strong>You</strong>:
+                    <div class="dropdown">
+                      <i class="fa-solid fa-caret-down" onclick="toggleDropdown(event, this)"></i>
+                      <div class="dropdown-content">
+                        <button class="delete-button" type="submit" id="delete-message-button">Delete <i class="fa-solid fa-trash"></i></button>
+                      </div>
+                    </div>
                   </th:block>
-                  <br>
-                  <span style="font-size: 16px;" th:text="${message.content}"></span>
-                  <br>
-                  <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
-                </p>
-              </div>
-
-
+                  
+                </div>
+              </form>
             </div>
           </div>
-
-
+          
           <form th:action="@{/send_message}" method="post">
             <div class="chat-input">
               <input type="hidden" name="senderId" th:value="${principal.id}" />
@@ -114,6 +127,25 @@
       }).catch(error => {
         console.error('There was a problem with the fetch operation:', error);
       });
+    });
+
+
+    function toggleDropdown(event, element) {
+        event.stopPropagation();
+        var dropdownContent = element.nextElementSibling;
+        var isVisible = dropdownContent.style.display === "block";
+        document.querySelectorAll('.dropdown-content').forEach(function(content) {
+            content.style.display = "none";
+        });
+        dropdownContent.style.display = isVisible ? "none" : "block";
+    }
+
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-content').forEach(function(content) {
+                content.style.display = "none";
+            });
+        }
     });
   </script>
 

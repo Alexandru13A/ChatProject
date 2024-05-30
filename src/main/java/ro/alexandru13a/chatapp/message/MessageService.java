@@ -36,4 +36,9 @@ public class MessageService {
     return messageRepository.getLastMessage(sender, receiver);
   }
 
+  public void deleteSelectedMessage(Integer messageId){
+      Message message = messageRepository.findById(messageId).get();
+      messageRepository.delete(message);
+  }
+
 }
