@@ -23,8 +23,11 @@ public class WebSecurityConfig {
   private DatabaseSuccessLoginHandler databaseSuccessLoginHandler;
 
   @Autowired
-  public void setDatabaseSuccessLoginHandler(DatabaseSuccessLoginHandler databaseSuccessLoginHandler) {
+  public void setDatabaseSuccessLoginHandler(DatabaseSuccessLoginHandler databaseSuccessLoginHandler,
+      OAuth2LoginSuccessHandler auth2LoginSuccessHandler, UserOAuth2Service auth2Service) {
     this.databaseSuccessLoginHandler = databaseSuccessLoginHandler;
+    this.auth2LoginSuccessHandler = auth2LoginSuccessHandler;
+    this.auth2Service = auth2Service;
   }
 
   @Bean
@@ -58,6 +61,10 @@ public class WebSecurityConfig {
             .usernameParameter("email")
             .successHandler(databaseSuccessLoginHandler)
             .permitAll())
+        .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+            .successHandler(auth2LoginSuccessHandler)
+            .userInfoEndpoint()
+            .userService(auth2Service))
         .logout(logout -> logout.permitAll())
         .rememberMe(remember -> remember.userDetailsService(userDetailsService()));
 

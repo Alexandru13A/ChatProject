@@ -10,6 +10,7 @@ public class UserOAuth2 implements OAuth2User {
 
   private String clientName;
   private String fullName;
+  private String username;
   private OAuth2User oAuth2User;
 
   public UserOAuth2(OAuth2User oAuth2User, String clientName) {
@@ -41,6 +42,10 @@ public class UserOAuth2 implements OAuth2User {
 
   public String getClientName() {
     return clientName;
+  }
+
+  public void setUsername(String username){
+    this.username = username;
   }
 
   public void setFullName(String fullName) {

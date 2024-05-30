@@ -9,11 +9,12 @@
     <div class="chat-app">
       <div class="sidebar">
         <div class="user-profile">
+
           <a style="cursor: pointer; text-decoration: none;" th:href="@{/account_details}">
             <img th:src="@{${userImage}}" alt="User Image" class="user-image">
           </a>
           <a th:href="@{/add_friend}">
-            <img th:src="@{/images/status/group.png}" style="max-width: 40px; max-height: 40px;">
+            <img class="main-window-add-friend-button" th:src="@{/images/status/group.png}">
           </a>
         </div>
 
@@ -26,11 +27,13 @@
             <a style="text-decoration: none;cursor: pointer;" th:href="@{/home(receiverId=${user.id})}">
               <li class="chat-li">
                 <div class="row m-2">
-                  <img th:src="@{${user.userImagePath}}" style="max-width: 60px; max-height: 60px;" />
+                  <img th:src="@{${user.userImagePath}}"
+                    style="max-width: 60px; max-height: 60px;border-radius: 50%;" />
                   &nbsp;
                   <div class="col m-1">
                     <label style="cursor: pointer;color: black;"><b>[[${user.username}]]</b></label>
-                    <p style="color: black;">Last message</p>
+                    <p style="color: black; margin-bottom: -8px;font-size: 14px;font-weight: 600;">[[${user.lastMessage}]]</p>
+                    <small style="color: black;cursor: pointer;" th:text="${#temporals.format(user.lastMessageTime, 'HH:mm')}"></small>
                   </div>
                 </div>
               </li>
@@ -41,36 +44,37 @@
 
 
       <th:block th:if="${receiver} != null">
-      <div class="chat-area">
+        <div class="chat-area">
           <div class="chat-header">
-            <span th:text="${receiver.username}">Chat with Friend</span>
+            <img style="width: 40px; height: 40px;border-radius: 50px;" th:src="@{${receiver.userImagePath}}">
+            <span th:text="${receiver.username}"></span>
           </div>
 
-         <div class="chat-messages" id="chat-messages">
-          <div th:each="message : ${messages}">
-            
-            <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
-              <p>
-                <th:block th:if="${message.userSender.id != principal.id}">
-                  <strong th:text="${message.userSender.username}"></strong>:
-                </th:block>
-                <th:block th:if="${message.userSender.id == principal.id}">
-                  <strong>You</strong>:
-                </th:block>
-                <br>
-                <span style="font-size: 16px;" th:text="${message.content}"></span>
-                <br>
-                <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
-              </p>
+          <div class="chat-messages" id="chat-messages">
+            <div th:each="message : ${messages}">
+
+              <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
+                <p>
+                  <th:block th:if="${message.userSender.id != principal.id}">
+                    <strong th:text="${message.userSender.username}"></strong>:
+                  </th:block>
+                  <th:block th:if="${message.userSender.id == principal.id}">
+                    <strong>You</strong>:
+                  </th:block>
+                  <br>
+                  <span style="font-size: 16px;" th:text="${message.content}"></span>
+                  <br>
+                  <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
+                </p>
+              </div>
+
+
             </div>
-
-
           </div>
-        </div>
-     
+
 
           <form th:action="@{/send_message}" method="post">
-          <div class="chat-input">
+            <div class="chat-input">
               <input type="hidden" name="senderId" th:value="${principal.id}" />
               <input type="hidden" name="receiverId" th:value="${receiver.id}" />
               <input class="input" type="text" name="content" placeholder="Type a message..." required>
@@ -81,7 +85,7 @@
           </form>
         </div>
       </th:block>
-      
+
     </div>
   </div>
 

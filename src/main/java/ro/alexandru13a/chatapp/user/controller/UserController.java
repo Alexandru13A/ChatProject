@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
+import ro.alexandru13a.chatapp.entity.Message;
 import ro.alexandru13a.chatapp.entity.User;
 import ro.alexandru13a.chatapp.mail.MailSender;
 import ro.alexandru13a.chatapp.message.MessageService;
@@ -49,14 +50,32 @@ public class UserController {
   @GetMapping("/home")
   public String chatPage(HttpServletRequest request, Model model,@RequestParam(value = "receiverId", required = false) Integer receiverId) {
 
-    String email = request.getUserPrincipal().getName();
+    String email = Utility.getEmailOfAuthenticatedUser(request);
     User principal = userService.getUserByEmail(email);
-
+    
     List<User> listFriends = userService.getFriends(principal.getId()).stream()
     .collect(Collectors.toList());
-  
+
+    List<User> listFriendsWithLastMessage = new ArrayList<>();
+    
+
+    for(User user : listFriends){
+      Message message = messageService.getLastMessage(principal,user);
+
+      if(message != null){
+        user.setLastMessage(message.getContent());
+        user.setLastMessageTime(message.getTimestamp());
+        listFriendsWithLastMessage.add(user);
+      }else{
+        user.setLastMessage("");
+        user.setLastMessageTime(null);
+        listFriendsWithLastMessage.add(user);
+      }
+    }
+
+    
     model.addAttribute("principal", principal);
-    model.addAttribute("listFriends", listFriends);
+    model.addAttribute("listFriends", listFriendsWithLastMessage);
     model.addAttribute("userImage", principal.getUserImagePath());
 
     if(receiverId != null){
@@ -73,7 +92,7 @@ public class UserController {
 
   @GetMapping("/add_friend")
   public String searchUsers(HttpServletRequest request, Model model, @Param("keyword") String keyword) {
-    String email = request.getUserPrincipal().getName();
+    String email = Utility.getEmailOfAuthenticatedUser(request);
     User loggedUser = userService.getUserByEmail(email);
 
     List<User> filteredUserList = new ArrayList<>();
@@ -94,7 +113,7 @@ public class UserController {
 
   @PostMapping("/add_friend/{id}")
   public String addFriend(@PathVariable("id") Integer id, HttpServletRequest request) {
-    String email = request.getUserPrincipal().getName();
+    String email = Utility.getEmailOfAuthenticatedUser(request);
     User loggedUser = userService.getUserByEmail(email);
     User userToAddAtFriends = userService.getUserById(id);
 
@@ -235,6 +254,7 @@ public class UserController {
       OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) principal;
       UserOAuth2 oAuth2User = (UserOAuth2) oauth2Token.getPrincipal();
       String fullName = user.getFirstName() + " " + user.getLastName();
+      oAuth2User.setUsername(fullName);
       oAuth2User.setFullName(fullName);
     }
   }

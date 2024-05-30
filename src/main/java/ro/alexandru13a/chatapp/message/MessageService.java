@@ -32,4 +32,8 @@ public class MessageService {
     return messageRepository.findBySenderAndReceiver(sender, receiver);
   }
 
+  public Message getLastMessage(User sender , User receiver){
+    return messageRepository.getLastMessage(sender, receiver);
+  }
+
 }

@@ -22,8 +22,10 @@
           <div style="margin-top: 70px; margin-left: 5px;" class="search-bar">
             <form th:action="@{/add_friend}">
               <div class="row">
-                <input style="width: min-content;" id="keyword" name="keyword" th:value="${keyword}" placeholder="Search..." class="form-control" required />
-                <input type="submit" value="Search" class="btn btn-primary" />
+                <input style="width: min-content;" id="keyword" name="keyword" th:value="${keyword}"
+                  placeholder="Search..." class="form-control" required />
+                  &nbsp;
+                <button type="submit" value="Search" class="add-friend-search-button">Search</button>
               </div>
             </form>
           </div>
@@ -31,17 +33,17 @@
           <div class="row m-1">
             <div class="col" th:each="user : ${users}">
               <label type="hidden" name="id" th:value="${user.id}">
-                <div>
-                  <img style="border-radius: 50%;" th:src="@{${user.userImagePath}}" width="80"/>
+                <div style="text-align: center;">
+                  <img style="border-radius: 50%;" th:src="@{${user.userImagePath}}" width="80" />
                 </div>
                 <div style="text-align: center;">
                   <b>[[${user.username}]]</b>
                   <br>
                   <form th:action="@{'/add_friend/'+ ${user.id}}" method="post">
-                    <button type="submit">Add friend+</button>
+                    <button class="add-friend-button"  type="submit">Add friend+</button>
                   </form>
                 </div>
-              </div>
+            </div>
           </div>
 
         </div>

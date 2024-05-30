@@ -108,7 +108,13 @@ public class UserService {
     userInForm.setFirstName(userInDb.getFirstName());
     userInForm.setLastName(userInDb.getLastName());
     userInForm.setEmail(userInDb.getEmail());
-    userInForm.setPhoneNumber(userInDb.getPhoneNumber());
+
+    if(userInDb.getPhoneNumber().isEmpty() || userInDb.getPhoneNumber() == null){
+      userInDb.setPhoneNumber(userInForm.getPhoneNumber());
+    }else{
+      userInForm.setPhoneNumber(userInDb.getPhoneNumber());
+    }
+
     userInForm.setEnabled(userInDb.isEnabled());
     userInForm.setCreatedTime(userInDb.getCreatedTime());
     userInForm.setVerificationCode(userInDb.getVerificationCode());

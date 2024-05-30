@@ -1,5 +1,6 @@
 package ro.alexandru13a.chatapp.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -77,6 +78,14 @@ public class User {
           inverseJoinColumns = @JoinColumn(name = "friend_id"))
           @OrderBy("id ASC")
   private Set<User> friends = new HashSet<>();
+
+  @Transient
+  private String lastMessage;
+
+  @Transient
+  private LocalDateTime lastMessageTime;
+
+  
   
   public String getFullName() {
     return firstName + " " + lastName;
@@ -89,5 +98,7 @@ public class User {
 
     return "/user-photo/" + this.id + "/" + this.profilePhoto;
   }
+
+  
 
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://org.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head th:replace="~{fragments :: page_head('none')}">
 
@@ -10,12 +10,12 @@
         <div class="loginShape"></div>
         <div class="loginShape"></div>
     </div>
-    <form class="loginForm" th:action="@{/login}" method="post" >
+    <form class="loginForm" th:action="@{/login}" method="post">
         <h3>Login Here</h3>
 
         <div th:if="${param.error}">
-			<p style="text-align: center;" class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
-		</div>
+            <p style="text-align: center;" class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+        </div>
 
         <label class="labelForm" for="username">Username</label>
         <input class="inputForm" type="email" name="email" placeholder="Email or Phone" id="username">
@@ -25,10 +25,15 @@
 
         <button type="submit" class="loginButton">Login</button>
         <div class="social">
-            <div style="cursor: pointer;" class="go"><img th:src="@{/images/buttons/google_logo.png}"
-                    style="max-width: 20; max-height: 20px;" />&nbsp; Google</div>
-            <div style="cursor: pointer;" class="fb"><img th:src="@{/images/buttons/facebook_logo.png}"
-                    style="max-width: 20; max-height: 20px;" />&nbsp;Facebook</div>
+
+            <a th:href="@{/oauth2/authorization/google}" style="text-decoration: none;">
+                <div style="cursor: pointer;" class="go"><img th:src="@{/images/buttons/google_logo.png}"
+                        style="max-width: 20; max-height: 20px;" />&nbsp; Google</div>
+            </a>
+            <a th:href="@{/oauth2/authorization/facebook}" style="text-decoration: none;">
+                <div style="cursor: pointer;" class="fb"><img th:src="@{/images/buttons/facebook_logo.png}"
+                        style="max-width: 20; max-height: 20px;" />&nbsp;Facebook</div>
+            </a>
         </div>
         <div> &nbsp; </div>
         <div style="text-align: center;">

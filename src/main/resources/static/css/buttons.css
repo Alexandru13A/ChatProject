@@ -1,0 +1,72 @@
+.add-friend-search-button {
+  background-color: white;
+  color: black;
+  width: 75px;
+  height: 36px;
+  border: none;
+  margin-top: 1px;
+  border-radius: 5px;
+}
+
+.add-friend-search-button:hover {
+  background-color: blueviolet;
+  color: white;
+
+}
+
+.add-friend-button {
+  background-color: white;
+  color: black;
+  width: 88px;
+  height: 30px;
+  border: none;
+  border-radius: 14px;
+}
+
+.add-friend-button:hover {
+  background-color: blueviolet;
+  color: white;
+}
+
+.user-details-save-button {
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.user-details-save-button:hover {
+  background-color: blueviolet;
+  color: white;
+}
+
+.logoutButton {
+  border: none;
+  border-radius: 14px;
+
+  color: black;
+  padding: 4px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.logoutButton:hover {
+  color: blueviolet;
+  text-decoration: none;
+}
+
+.user-details-back-button{
+  height: 20px;
+  width: 20px;
+}
+
+.user-details-back-button:hover{
+  height: 26px;
+  width: 26px;
+}
+
+.main-window-add-friend-button{
+  width: 40px;
+  height: 40px;
+}
