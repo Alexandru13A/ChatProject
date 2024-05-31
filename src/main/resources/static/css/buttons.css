@@ -66,6 +66,16 @@
   width: 26px;
 }
 
+.user-add-friend-back-button{
+  height: 20px;
+  width: 20px;
+}
+
+.user-add-friend-back-button:hover{
+  height: 26px;
+  width: 26px;
+}
+
 .main-window-add-friend-button{
   width: 40px;
   height: 40px;

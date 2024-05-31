@@ -48,46 +48,54 @@ public class UserController {
   }
 
   @GetMapping("/home")
-  public String chatPage(HttpServletRequest request, Model model,@RequestParam(value = "receiverId", required = false) Integer receiverId) {
+  public String chatPage(HttpServletRequest request, Model model,
+      @RequestParam(value = "receiverId", required = false) Integer receiverId) {
 
     String email = Utility.getEmailOfAuthenticatedUser(request);
     User principal = userService.getUserByEmail(email);
-    
+
     List<User> listFriends = userService.getFriends(principal.getId()).stream()
-    .collect(Collectors.toList());
+        .collect(Collectors.toList());
 
     List<User> listFriendsWithLastMessage = new ArrayList<>();
-    
 
-    for(User user : listFriends){
-      Message message = messageService.getLastMessage(principal,user);
+    for (User user : listFriends) {
+      Message message = messageService.getLastMessage(principal, user);
 
-      if(message != null){
-        user.setLastMessage(message.getContent());
+      if (message != null) {
+        user.setLastMessage(truncateMessage(message.getContent()));
         user.setLastMessageTime(message.getTimestamp());
         listFriendsWithLastMessage.add(user);
-      }else{
+      } else {
         user.setLastMessage("");
         user.setLastMessageTime(null);
         listFriendsWithLastMessage.add(user);
       }
     }
 
-    
     model.addAttribute("principal", principal);
     model.addAttribute("listFriends", listFriendsWithLastMessage);
     model.addAttribute("userImage", principal.getUserImagePath());
 
-    if(receiverId != null){
+    if (receiverId != null) {
       User receiver = userService.getUserById(receiverId);
       model.addAttribute("receiver", receiver);
       model.addAttribute("messages", messageService.getMessageBetweenUsers(principal, receiver));
-     
-    }else{
+
+    } else {
       model.addAttribute("receiver", null);
     }
 
     return ("chat/main_chat_window");
+  }
+
+  private String truncateMessage(String message) {
+    int maxLength = 24;
+    if (message.length() > maxLength) {
+      return message.substring(0, maxLength) + "...";
+    } else {
+      return message;
+    }
   }
 
   @GetMapping("/add_friend")
@@ -106,7 +114,6 @@ public class UserController {
             .collect(Collectors.toList()));
 
     model.addAttribute("users", filteredUserList);
-    model.addAttribute("keyword", keyword);
     return "user/add_friend";
 
   }
@@ -122,6 +129,18 @@ public class UserController {
     }
 
     userService.addFriend(loggedUser.getId(), userToAddAtFriends.getId());
+
+    return "redirect:/home";
+  }
+
+  @PostMapping("/delete_friend/{id}")
+  public String deleteFriend(HttpServletRequest request, @PathVariable("id")Integer friendId) {
+
+    String email = Utility.getEmailOfAuthenticatedUser(request);
+    User loggedUser = userService.getUserByEmail(email);
+    User friend = userService.getUserById(friendId);
+
+    userService.removeFriend(loggedUser.getId(), friend.getId());
 
     return "redirect:/home";
   }
@@ -215,12 +234,11 @@ public class UserController {
   public String updateAccount(User user, RedirectAttributes redirectAttributes, HttpServletRequest request,
       @RequestParam("image") MultipartFile multipartFile, @RequestParam("newUsername") String newUsername)
       throws IOException {
-       
 
-        if(!userService.isUsernameUnique(newUsername)){
-          redirectAttributes.addFlashAttribute("message","The username "+newUsername+" it's already taken");
-          return "redirect:/account_details";
-        }
+    if (!userService.isUsernameUnique(newUsername)) {
+      redirectAttributes.addFlashAttribute("message", "The username " + newUsername + " it's already taken");
+      return "redirect:/account_details";
+    }
 
     if (!multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());

@@ -14,7 +14,7 @@
 
           <div>
             <a th:href="@{/home}">
-              <img th:src="@{images/buttons/undo.png}" style="max-width: 20px;max-height: 20px;">
+              <img class="user-add-friend-back-button" th:src="@{images/buttons/undo.png}"/>
             </a>
           </div>
 
@@ -34,7 +34,7 @@
             <div class="col" th:each="user : ${users}">
               <label type="hidden" name="id" th:value="${user.id}">
                 <div style="text-align: center;">
-                  <img style="border-radius: 50%;" th:src="@{${user.userImagePath}}" width="80" />
+                  <img style="border-radius: 50%;" th:src="@{${user.userImagePath}}" width="80" height="80"/>
                 </div>
                 <div style="text-align: center;">
                   <b>[[${user.username}]]</b>
