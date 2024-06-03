@@ -62,8 +62,14 @@ public class MessageController {
     for (Message messageToDelete : messages) {
       if (messageToDelete.getId() == messageId) {
         messageService.deleteSelectedMessage(messageId);
+        if(messageToDelete.getPhoto() != null){
+          String messagePhotoDir = "message-photo/"+sender.getUsername()+"/"+messageId;
+          FileUploadUtil.removeDirectory(messagePhotoDir);
+        }
       }
     }
+
+  
 
     return "redirect:/home?receiverId=" + receiverId;
   }
