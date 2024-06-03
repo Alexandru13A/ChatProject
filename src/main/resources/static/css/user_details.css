@@ -1,7 +1,19 @@
+.chat-app-user-details {
+  display: flex;
+  flex-direction: row;
+  height: auto;  /* Adjust the height relative to viewport */
+  width: 90%;
+  max-width: 1200px;  /* Max width for large screens */
+  margin: 50px auto;  /* Center the chat app */
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .main-window {
   flex-grow: 1;
   padding: 10px;
   background-color: rgba(254, 254, 254, 0.4);
   font-size: 14px;
+  height: 650px;
 }
 

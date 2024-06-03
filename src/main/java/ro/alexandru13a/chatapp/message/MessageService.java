@@ -19,14 +19,27 @@ public class MessageService {
 
   public Message saveMessage(String content, User sender, User receiver) {
     Message message = new Message();
-
     message.setContent(content);
     message.setUserSender(sender);
     message.setUserReceiver(receiver);
     message.setTimestamp(LocalDateTime.now());
-
     return messageRepository.save(message);
   }
+  public Message savePhoto(String photo,String content, User sender, User receiver) {
+    Message message = new Message();
+    message.setPhoto(photo);
+    if(content == null || content.isEmpty()){
+      message.setContent(" ");
+    }else{
+      message.setContent(content);
+    }
+    
+    message.setUserSender(sender);
+    message.setUserReceiver(receiver);
+    message.setTimestamp(LocalDateTime.now());
+    return messageRepository.save(message);
+  }
+ 
 
   public List<Message> getMessageBetweenUsers(User sender, User receiver) {
     return messageRepository.findBySenderAndReceiver(sender, receiver);

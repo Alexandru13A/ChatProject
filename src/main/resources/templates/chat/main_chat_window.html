@@ -27,12 +27,13 @@
           <ul class="chat-ul" th:each="user : ${listFriends}">
             <li class="chat-li">
               <input type="hidden" name="friendId" th:value="${user.id}" />
+              
               <form th:action="@{'/delete_friend/'+ ${user.id}}" method="post">
                 <div style="text-align: end;" class="col">
                   <div class="dropdown">
                     <i class="fa-solid fa-caret-down" onclick="toggleDropdown(event, this)"></i>
                     <div class="dropdown-content">
-                      <button class="delete-button" type="submit" id="delete-message-button">Delete friend <i
+                      <button class="delete-button" type="submit" id="delete-friend-button">Delete friend <i
                           class="fa-solid fa-trash"></i></button>
                     </div>
                   </div>
@@ -56,6 +57,7 @@
             </li>
           </ul>
         </div>
+        
       </div>
 
 
@@ -68,7 +70,7 @@
 
           <div class="chat-messages" id="chat-messages">
             <div th:each="message : ${messages}">
-              <form th:action="@{'/delete_message/' + ${message.id}}" method="post">
+              <form th:action="@{'/delete_message/' + ${message.id}}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="messageId" th:value="${message.id}" />
                 <input type="hidden" name="receiverId" th:value="${receiver.id}" />
                 <div th:classappend="${message.userSender.id == principal.id} ? 'sent' : 'received'" class="message">
@@ -80,6 +82,10 @@
                       <strong>You</strong>:
                     </th:block>
                     <br>
+                    <th:block th:if="${message.photo != null}">
+                      <img th:src="@{${message.photoImagePath}}" alt="Image message" style="max-width: 150px;max-height: 150px;">
+                      <br>
+                    </th:block>
                     <span style="font-size: 16px;" th:text="${message.content}"></span>
                     <br>
                     <small th:text="${#temporals.format(message.timestamp, 'HH:mm')}"></small>
@@ -102,13 +108,17 @@
             </div>
           </div>
 
-          <form th:action="@{/send_message}" method="post">
+          <form th:action="@{/send_message}" method="post" enctype="multipart/form-data">
             <div class="chat-input">
               <input type="hidden" name="senderId" th:value="${principal.id}" />
               <input type="hidden" name="receiverId" th:value="${receiver.id}" />
-              <input class="input" type="text" name="content" placeholder="Type a message..." required>
+              <input class="input" type="text" name="content" placeholder="Type a message...">
+              <input type="file" name="image" accept="image/*" class="send-attach-button">
+                <!-- <i class="fa-solid fa-paperclip"></i> -->
+              </input>
+              &nbsp;
               <button type="submit" class="send-button">
-                <img th:src="@{images/buttons/send.png}" alt="Send">
+                <i class="fa-solid fa-paper-plane"></i> 
               </button>
             </div>
           </form>

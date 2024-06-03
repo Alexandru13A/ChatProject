@@ -1,7 +1,7 @@
 .chat-app {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 200px);  /* Adjust the height relative to viewport */
+  height: calc(100vh - 200px) ;  /* Adjust the height relative to viewport */
   width: 90%;
   max-width: 1200px;  /* Max width for large screens */
   margin: 50px auto;  /* Center the chat app */
@@ -103,6 +103,7 @@
 }
 
 .chat-input {
+  justify-content: space-around;
   background-color: white;
   display: flex;
   padding: 5px 10px;
@@ -120,8 +121,8 @@
 
 .send-button {
   padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
   border-radius: 100px;
   cursor: pointer;
@@ -129,6 +130,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.send-button:hover {
+  background-color: blueviolet;
+}
+
+.send-attach-button{
+  padding: 5px 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.send-attach-button:hover{
+  background-color: blueviolet;
 }
 
 .send-button img {

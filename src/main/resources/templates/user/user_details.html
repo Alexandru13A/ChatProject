@@ -5,7 +5,7 @@
 
 <body>
 
-  <div class="chat-app">
+  <div class="chat-app-user-details">
 
     <div class="main-window">
 
@@ -45,41 +45,41 @@
 
               &nbsp;
            
-              <div style="margin-top: 50px;">
+              <div style="margin-top: 10px;">
                 <label style="font-size: 16px;"><b>Change username</b></label>
                 <label>(Leave it blank if you don't want to change the username)</label>
                 <div th:if="${message} != null">
                   <p class="text-danger">[[${message}]]</p>
               </div>
-                <input type="text" style="border-radius: 40px;border: none; margin-left: 100px;" class="chat-input"
+                <input type="text" style="border-radius: 40px;border: none; margin-left: auto;margin-right: auto;" class="chat-input"
                   placeholder="Change username" id="newUsername" name="newUsername"/>
               </div>
 
               <th:block th:if="${#strings.isEmpty(user.phoneNumber)}">
                 <div>
                   <label style="font-size: 16px;margin-top: 30px;"><b>Enter your phone number</b></label>
-                  <input style="border-radius: 40px;border: none; margin-left: 100px;" class="chat-input" type="text" placeholder="Phone number..." th:filed="${phoneNumber}">
+                  <input style="border-radius: 40px;border: none; margin-left: auto;margin-right: auto;" class="chat-input" type="text" placeholder="Phone number..." th:filed="${phoneNumber}">
                 </div>
               </th:block>
 
               <th:block th:if="${user.authenticationType.name() =='DATABASE'}">
                 &nbsp;
                 <div>
-                  <label style="font-size: 16px;margin-top: 30px;"><b>Change password</b></label>
+                  <label style="font-size: 16px;margin-top: 15px;"><b>Change password</b></label>
                   <label>(Leave it blank if you don't want to change the password)</label>
 
-                  <input type="password" style="border-radius: 40px;border: none; margin-left: 100px;"
+                  <input type="password" style="border-radius: 40px;border: none; margin-left: auto;margin-right: auto;"
                     class="chat-input" placeholder="Change password" th:field="*{password}"
                     oninput="checkPasswordMatch(document.getElementById('confirmPassword'))" maxlength="70"
                     minlength="8" />
 
                   <input type="password" id="confirmPassword"
-                    style="border-radius: 40px;border: none; margin-top: 10px;margin-left: 100px;" class="chat-input"
+                    style="border-radius: 40px;border: none; margin-top: 10px;margin-left: auto;margin-right: auto;" class="chat-input"
                     placeholder="Confirm password" oninput="checkPasswordMatch(this)" maxlength="70" minlength="8" />
                 </div>
               </th:block>
 
-              <div style="margin-top: 50px;">
+              <div style="margin-top: 20px;">
                 <button class="user-details-save-button" type="submit" name="save">Save</button>
               </div>
 
